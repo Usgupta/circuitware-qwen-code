@@ -338,15 +338,18 @@ export async function main() {
 
 function setWindowTitle(title: string, settings: LoadedSettings) {
   if (!settings.merged.hideWindowTitle) {
-    const windowTitle = (process.env['CLI_TITLE'] || `Qwen - ${title}`).replace(
+    const appName = process.env['CLI_APP_NAME'] || 'Qwen';
+    const windowTitle = (
+      process.env['CLI_TITLE'] || `${appName} - ${title}`
+    ).replace(
       // eslint-disable-next-line no-control-regex
-      /[\x00-\x1F\x7F]/g,
+      /[\\x00-\\x1F\\x7F]/g,
       '',
     );
-    process.stdout.write(`\x1b]2;${windowTitle}\x07`);
+    process.stdout.write(`\\x1b]2;${windowTitle}\\x07`);
 
     process.on('exit', () => {
-      process.stdout.write(`\x1b]2;\x07`);
+      process.stdout.write(`\\x1b]2;\\x07`);
     });
   }
 }

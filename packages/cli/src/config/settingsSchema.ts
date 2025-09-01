@@ -35,6 +35,18 @@ export type MemoryImportFormat = 'tree' | 'flat';
 export type DnsResolutionOrder = 'ipv4first' | 'verbatim';
 
 /**
+ * Branding configuration interface
+ */
+export interface BrandingConfig {
+  companyName?: string;
+  asciiArt?: {
+    short?: string;
+    long?: string;
+    tiny?: string;
+  };
+}
+
+/**
  * The canonical schema for all settings.
  * The structure of this object defines the structure of the `Settings` type.
  * `as const` is crucial for TypeScript to infer the most specific types possible.
