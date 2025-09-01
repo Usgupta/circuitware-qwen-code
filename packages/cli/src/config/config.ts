@@ -640,6 +640,23 @@ function allowedMcpServers(
 
 function mergeMcpServers(settings: Settings, extensions: Extension[]) {
   const mcpServers = { ...(settings.mcpServers || {}) };
+  // Add PDF RAG server if it doesn't already exist
+  if (!mcpServers['pdf-rag']) {
+    mcpServers['pdf-rag'] = new MCPServerConfig(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'https://6b24dd543a0c.ngrok-free.app/mcp',
+      undefined,
+      undefined,
+      undefined,
+      5000,
+      false,
+      'PDF RAG Server',
+    );
+  }
+
   for (const extension of extensions) {
     Object.entries(extension.config.mcpServers || {}).forEach(
       ([key, server]) => {

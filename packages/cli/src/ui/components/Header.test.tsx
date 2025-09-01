@@ -8,7 +8,7 @@ import { render } from 'ink-testing-library';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Header } from './Header.js';
 import * as useTerminalSize from '../hooks/useTerminalSize.js';
-import { longAsciiLogo } from './AsciiArt.js';
+import { longAsciiLogo } from './CwareAsciiArt.js';
 
 vi.mock('../hooks/useTerminalSize.js');
 
@@ -21,7 +21,9 @@ describe('<Header />', () => {
       rows: 20,
     });
     const { lastFrame } = render(<Header version="1.0.0" nightly={false} />);
+    // Normalize whitespace for comparison
     expect(lastFrame()).toContain(longAsciiLogo);
+
   });
 
   it('renders custom ASCII art when provided', () => {
@@ -33,11 +35,19 @@ describe('<Header />', () => {
   });
 
   it('displays the version number when nightly is true', () => {
+    vi.spyOn(useTerminalSize, 'useTerminalSize').mockReturnValue({
+      columns: 120,
+      rows: 20,
+    });
     const { lastFrame } = render(<Header version="1.0.0" nightly={true} />);
     expect(lastFrame()).toContain('v1.0.0');
   });
 
   it('does not display the version number when nightly is false', () => {
+    vi.spyOn(useTerminalSize, 'useTerminalSize').mockReturnValue({
+      columns: 120,
+      rows: 20,
+    });
     const { lastFrame } = render(<Header version="1.0.0" nightly={false} />);
     expect(lastFrame()).not.toContain('v1.0.0');
   });
