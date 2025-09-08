@@ -42,6 +42,43 @@ packages/core/src/generated/
 .integration-tests/
 packages/vscode-ide-companion/*.vsix
 
+# Generated JavaScript and declaration files
+packages/*/src/**/*.js
+packages/*/src/**/*.d.ts
+packages/*/src/**/*.js.map
+!packages/*/src/**/index.d.ts
+
+# Generated files in package roots
+packages/*/*.js
+packages/*/*.d.ts
+packages/*/*.js.map
+packages/*/index.d.ts
+
+# Specific generated index.d.ts files
+packages/core/src/index.d.ts
+packages/core/src/telemetry/index.d.ts
+
+# Generated files in integration tests
+integration-tests/*.js
+integration-tests/*.d.ts
+integration-tests/*.js.map
+
+# Generated files in scripts
+scripts/tests/*.js
+scripts/tests/*.d.ts
+scripts/tests/*.js.map
+
+# Generated files in test-utils
+packages/test-utils/*.js
+packages/test-utils/*.d.ts
+packages/test-utils/*.js.map
+packages/test-utils/src/*.js
+packages/test-utils/src/*.d.ts
+packages/test-utils/src/*.js.map
+
+# PDF files (usually generated documentation)
+*.pdf
+
 # Qwen Code Configs
 .qwen/
 logs/

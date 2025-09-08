@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ShellTool, EditTool, WriteFileTool } from '@qwen-code/qwen-code-core';
+import { ShellTool, EditTool, WriteFileTool, MCPServerConfig } from '@qwen-code/qwen-code-core';
 import { loadCliConfig, parseArguments, CliArgs } from './config.js';
 import { Settings } from './settings.js';
 import { Extension } from './extension.js';
@@ -969,6 +969,7 @@ describe('mergeExcludeTools', () => {
     const settings: Settings = { excludeTools: ['tool1'] };
     const extensions: Extension[] = [
       {
+        path: '/path/to/ext1',
         config: {
           name: 'ext1',
           version: '1.0.0',
@@ -1015,7 +1016,7 @@ describe('Approval mode tool exclusion logic', () => {
     expect(excludedTools).toContain(WriteFileTool.Name);
   });
 
-  it('should exclude all interactive tools in non-interactive mode with explicit default approval mode', async () => {
+  it('should exclude all interactive tools in non-interactive mode with expliit default approval mode', async () => {
     process.argv = [
       'node',
       'script.js',
@@ -1217,7 +1218,24 @@ describe('loadCliConfig with allowed-mcp-server-names', () => {
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments();
     const config = await loadCliConfig(baseSettings, [], 'test-session', argv);
-    expect(config.getMcpServers()).toEqual(baseSettings.mcpServers);
+    // Create expected object with default servers added
+    const expectedServers = {
+      ...baseSettings.mcpServers,
+      'pdf-rag': new MCPServerConfig(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        'https://6b24dd543a0c.ngrok-free.app/mcp',
+        undefined,
+        undefined,
+        undefined,
+        5000,
+        false,
+        'PDF RAG Server',
+      ),
+    };
+    expect(config.getMcpServers()).toEqual(expectedServers);
   });
 
   it('should allow only the specified MCP server', async () => {
@@ -1296,9 +1314,24 @@ describe('loadCliConfig with allowed-mcp-server-names', () => {
       excludeMCPServers: ['server1', 'server2'],
     };
     const config = await loadCliConfig(settings, [], 'test-session', argv);
-    expect(config.getMcpServers()).toEqual({
+    // Create expected object with default servers added
+    const expectedServers = {
       server3: { url: 'http://localhost:8082' },
-    });
+      'pdf-rag': new MCPServerConfig(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        'https://6b24dd543a0c.ngrok-free.app/mcp',
+        undefined,
+        undefined,
+        undefined,
+        5000,
+        false,
+        'PDF RAG Server',
+      ),
+    };
+    expect(config.getMcpServers()).toEqual(expectedServers);
   });
 
   it('should override allowMCPServers with excludeMCPServers if overlapping ', async () => {

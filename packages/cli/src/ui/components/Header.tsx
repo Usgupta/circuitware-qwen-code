@@ -8,14 +8,18 @@ import React from 'react';
 import { Box, Text } from 'ink';
 import Gradient from 'ink-gradient';
 import { Colors } from '../colors.js';
-import { shortAsciiLogo, longAsciiLogo, tinyAsciiLogo } from './CwareAsciiArt.js';
+import {
+  shortAsciiLogo,
+  longAsciiLogo,
+  tinyAsciiLogo,
+} from './CwareAsciiArt.js';
 import { getAsciiArtWidth } from '../utils/textUtils.js';
 import { useTerminalSize } from '../hooks/useTerminalSize.js';
 
 // Custom ASCII art from environment variables (fallback to imported art)
-const customShortAsciiLogo = process.env.CLI_ASCII_SHORT || '';
-const customLongAsciiLogo = process.env.CLI_ASCII_LONG || '';
-const customTinyAsciiLogo = process.env.CLI_ASCII_TINY || '';
+const customShortAsciiLogo = process.env['CLI_ASCII_SHORT'] || '';
+const customLongAsciiLogo = process.env['CLI_ASCII_LONG'] || '';
+const customTinyAsciiLogo = process.env['CLI_ASCII_TINY'] || '';
 
 interface HeaderProps {
   customAsciiArt?: string; // For user-defined ASCII art
@@ -30,12 +34,12 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const { columns: terminalWidth } = useTerminalSize();
   let displayTitle;
-  
+
   // Use custom ASCII art from environment variables if available, otherwise use imported art
   const effectiveShortLogo = customShortAsciiLogo || shortAsciiLogo;
   const effectiveLongLogo = customLongAsciiLogo || longAsciiLogo;
   const effectiveTinyLogo = customTinyAsciiLogo || tinyAsciiLogo;
-  
+
   const widthOfLongLogo = getAsciiArtWidth(effectiveLongLogo);
   const widthOfShortLogo = getAsciiArtWidth(effectiveShortLogo);
 
