@@ -1,5 +1,5 @@
 {
-  "name": "@qwen-code/qwen-code",
+  "name": "@circuitware-code/circuitware-code",
   "version": "0.0.10",
   "engines": {
     "node": ">=20.0.0"
