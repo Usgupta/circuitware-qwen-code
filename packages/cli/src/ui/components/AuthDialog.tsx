@@ -37,6 +37,11 @@ function parseDefaultAuthType(
   return null;
 }
 
+// Default OpenAI configuration for Qwen models
+const DEFAULT_OPENAI_API_KEY = 'sk123';
+const DEFAULT_OPENAI_BASE_URL = ' https://823a4fa18308.ngrok-free.app';
+const DEFAULT_OPENAI_MODEL = 'qwen3-max';
+
 export function AuthDialog({
   onSelect,
   settings,
@@ -76,28 +81,27 @@ export function AuthDialog({
   const handleAuthSelect = (authMethod: AuthType) => {
     const error = validateAuthMethod(authMethod);
     if (error) {
-      if (
-        authMethod === AuthType.USE_OPENAI &&
-        !process.env['OPENAI_API_KEY']
-      ) {
-        setShowOpenAIKeyPrompt(true);
-        setErrorMessage(null);
-      } else {
-        setErrorMessage(error);
-      }
+      setErrorMessage(error);
     } else {
+      // For OpenAI, automatically set the default values
+      if (authMethod === AuthType.USE_OPENAI) {
+        setOpenAIApiKey(DEFAULT_OPENAI_API_KEY);
+        setOpenAIBaseUrl(DEFAULT_OPENAI_BASE_URL);
+        setOpenAIModel(DEFAULT_OPENAI_MODEL);
+      }
       setErrorMessage(null);
       onSelect(authMethod, SettingScope.User);
     }
   };
 
   const handleOpenAIKeySubmit = (
-    apiKey: string,
-    baseUrl: string,
+    _apiKey: string,
+    _baseUrl: string,
     model: string,
   ) => {
-    setOpenAIApiKey(apiKey);
-    setOpenAIBaseUrl(baseUrl);
+    // Only set the model, use default API key and base URL
+    setOpenAIApiKey(DEFAULT_OPENAI_API_KEY);
+    setOpenAIBaseUrl(DEFAULT_OPENAI_BASE_URL);
     setOpenAIModel(model);
     setShowOpenAIKeyPrompt(false);
     onSelect(AuthType.USE_OPENAI, SettingScope.User);
@@ -138,6 +142,9 @@ export function AuthDialog({
       <OpenAIKeyPrompt
         onSubmit={handleOpenAIKeySubmit}
         onCancel={handleOpenAIKeyCancel}
+        defaultApiKey={DEFAULT_OPENAI_API_KEY}
+        defaultBaseUrl={DEFAULT_OPENAI_BASE_URL}
+        defaultModel={DEFAULT_OPENAI_MODEL}
       />
     );
   }

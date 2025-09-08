@@ -40,9 +40,7 @@ export const validateAuthMethod = (authMethod: string): string | null => {
   }
 
   if (authMethod === AuthType.USE_OPENAI) {
-    if (!process.env['OPENAI_API_KEY']) {
-      return 'OPENAI_API_KEY environment variable not found. You can enter it interactively or add it to your .env file.';
-    }
+    // For OpenAI, we'll use default values
     return null;
   }
 
